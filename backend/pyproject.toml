@@ -1,0 +1,21 @@
+[project]
+name = "api"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Ryan Catacutan", email = "94097753+rycatt@users.noreply.github.com" }
+]
+requires-python = ">=3.9"
+dependencies = [
+    "fastapi[standard]>=0.128.8",
+    "google-genai>=1.47.0",
+    "python-dotenv>=1.2.1",
+]
+
+[build-system]
+requires = ["uv_build>=0.12.17,<0.13.0"]
+build-backend = "uv_build"
+
+[tool.fastapi]
+entrypoint = "api.main:app"
