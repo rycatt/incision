@@ -14,26 +14,6 @@ export default function Home() {
 
   return (
     <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>
-      <h1
-        style={{
-          position: 'absolute',
-          top: 24,
-          left: 264,
-          zIndex: 2,
-          margin: 0,
-          padding: '11px 16px',
-          borderLeft: '4px solid #ff8b52',
-          background: 'rgba(15, 18, 28, 0.94)',
-          boxShadow: '0 8px 24px rgba(15, 18, 28, 0.2)',
-          color: '#f5bd58',
-          fontFamily: 'var(--font-geist-sans), sans-serif',
-          fontSize: 18,
-          fontWeight: 700,
-          lineHeight: 1.2,
-        }}
-      >
-        Beyond dissection
-      </h1>
 
       <Sidebar
         meshes={meshes}
@@ -42,12 +22,22 @@ export default function Home() {
         onToggleGroup={toggleGroup}
       />
 
-      <ModelViewer
-        selected={selected}
-        onSelect={setSelected}
-        visibility={visibility}
-        onMeshesLoaded={setMeshes}
-      />
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          bottom: 0,
+          left: 0,
+          right: 0,
+        }}
+      >
+        <ModelViewer
+          selected={selected}
+          onSelect={setSelected}
+          visibility={visibility}
+          onMeshesLoaded={setMeshes}
+        />
+      </div>
 
       <InfoPanel
         part={selected ? ORGAN_INFO[selected] ?? FALLBACK : null}

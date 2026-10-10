@@ -1,31 +1,11 @@
-import type { CSSProperties } from 'react';
+export const SECTION_HEADER =
+  'mb-3 text-xs font-medium tracking-widest text-blue-600 uppercase';
 
-export const SECTION_HEADER: CSSProperties = {
-  fontSize: 11,
-  textTransform: 'uppercase',
-  letterSpacing: '0.15em',
-  color: 'rgba(255,255,255,0.5)',
-  margin: '0 0 12px 0',
-};
+export const ROW =
+  'flex cursor-pointer items-center gap-2.5 rounded-lg px-2 py-1.5 select-none transition-colors hover:bg-slate-100';
 
-export const ROW: CSSProperties = {
-  display: 'flex',
-  alignItems: 'center',
-  gap: 10,
-  padding: '7px 4px',
-  cursor: 'pointer',
-  userSelect: 'none',
-  borderRadius: 4,
-};
+export const CHECKBOX = 'h-4 w-4 cursor-pointer accent-blue-600';
 
-export const LABEL_ON: CSSProperties = {
-  fontSize: 13,
-  color: 'white',
-  transition: 'color 0.15s',
-};
+export const LABEL_ON = 'text-sm text-slate-800 transition-colors';
 
-export const LABEL_OFF: CSSProperties = {
-  fontSize: 13,
-  color: 'rgba(255,255,255,0.4)',
-  transition: 'color 0.15s',
-};
+export const LABEL_OFF = 'text-sm text-slate-400 transition-colors';

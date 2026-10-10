@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import type { Group } from '../types/anatomy';
 
-// Tracks which mesh names are shown. A missing entry means visible.
 export default function useVisibility() {
   const [visibility, setVisibility] = useState<Record<string, boolean>>({});
 

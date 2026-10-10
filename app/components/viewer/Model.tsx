@@ -35,7 +35,6 @@ export default function Model({
     });
     console.log('Mesh names in this GLB:', names);
     onMeshesLoaded(names);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gltf]);
 
   useEffect(() => {

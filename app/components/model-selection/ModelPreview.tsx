@@ -7,13 +7,11 @@ import * as THREE from 'three';
 
 function PreviewModel({ path }: { path: string }) {
   const { scene } = useGLTF(path);
-  // Clone so the turntable doesn't move the viewer's cached copy of the scene
   const model = useMemo(() => scene.clone(true), [scene]);
 
   return <primitive object={model} />;
 }
 
-// Radians per second
 const SPIN_SPEED = 0.3;
 
 function Turntable({ children }: { children: React.ReactNode }) {
@@ -31,7 +29,6 @@ export default function ModelPreview({ path }: { path: string }) {
       dpr={[1, 2]}
       style={{ pointerEvents: 'none' }}
     >
-      {/* Same lighting as the viewer so textures look the same in both */}
       <ambientLight intensity={1.5} />
       <directionalLight position={[3, 5, 4]} intensity={2} />
       <directionalLight position={[-3, 2, -4]} intensity={1} />

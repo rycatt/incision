@@ -5,5 +5,4 @@ export const MODEL_CONFIG = {
   scale: 1,
 };
 
-// Opacity of parts that are toggled off in the sidebar
 export const GHOST_OPACITY = 0.12;

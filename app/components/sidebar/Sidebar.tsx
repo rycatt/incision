@@ -3,7 +3,7 @@
 import { GROUPS } from '../../data/groups';
 import { ORGAN_INFO } from '../../data/organInfo';
 import type { Group } from '../../types/anatomy';
-import { SECTION_HEADER, ROW, LABEL_ON, LABEL_OFF } from './styles';
+import { SECTION_HEADER, ROW, CHECKBOX, LABEL_ON, LABEL_OFF } from './styles';
 
 export default function Sidebar({
   meshes,
@@ -19,26 +19,10 @@ export default function Sidebar({
   const visibleGroups = GROUPS.filter((g) => g.members.length > 0);
 
   return (
-    <div
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: 240,
-        height: '100vh',
-        background: 'rgba(15, 18, 28, 0.94)',
-        backdropFilter: 'blur(10px)',
-        color: 'white',
-        padding: '24px 20px',
-        overflowY: 'auto',
-        zIndex: 10,
-        borderRight: '1px solid rgba(255,255,255,0.08)',
-        fontFamily: 'system-ui, sans-serif',
-      }}
-    >
+    <aside className="fixed top-6 right-6 z-10 max-h-[calc(100%-3rem)] w-64 overflow-y-auto overscroll-contain rounded-2xl border border-slate-200 bg-white/95 p-6 shadow-xl backdrop-blur">
       {visibleGroups.length > 0 && (
         <>
-          <h2 style={SECTION_HEADER}>Systems</h2>
+          <h2 className={SECTION_HEADER}>Systems</h2>
 
           {visibleGroups.map((group) => {
             const allVisible = group.members.every(
@@ -47,10 +31,9 @@ export default function Sidebar({
             const anyVisible = group.members.some(
               (m) => visibility[m] !== false
             );
-            const labelStyle = anyVisible ? LABEL_ON : LABEL_OFF;
 
             return (
-              <label key={group.id} style={ROW}>
+              <label key={group.id} className={ROW}>
                 <input
                   type="checkbox"
                   checked={allVisible}
@@ -58,46 +41,40 @@ export default function Sidebar({
                     if (el) el.indeterminate = !allVisible && anyVisible;
                   }}
                   onChange={() => onToggleGroup(group)}
-                  style={{ cursor: 'pointer' }}
+                  className={CHECKBOX}
                 />
-                <span style={labelStyle}>{group.label}</span>
+                <span className={anyVisible ? LABEL_ON : LABEL_OFF}>
+                  {group.label}
+                </span>
               </label>
             );
           })}
 
-          <div
-            style={{
-              height: 1,
-              background: 'rgba(255,255,255,0.08)',
-              margin: '18px 0 18px',
-            }}
-          />
+          <div className="my-4 h-px bg-slate-200" />
         </>
       )}
 
-      <h2 style={SECTION_HEADER}>Individual Parts</h2>
+      <h2 className={SECTION_HEADER}>Individual Parts</h2>
 
       {meshes.length === 0 && (
-        <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>
-          No named meshes found.
-        </p>
+        <p className="text-sm text-slate-400">No named meshes found.</p>
       )}
 
       {meshes.map((name) => {
         const isVisible = visibility[name] !== false;
         const label = ORGAN_INFO[name]?.label ?? name;
         return (
-          <label key={name} style={ROW}>
+          <label key={name} className={ROW}>
             <input
               type="checkbox"
               checked={isVisible}
               onChange={() => onToggle(name)}
-              style={{ cursor: 'pointer' }}
+              className={CHECKBOX}
             />
-            <span style={isVisible ? LABEL_ON : LABEL_OFF}>{label}</span>
+            <span className={isVisible ? LABEL_ON : LABEL_OFF}>{label}</span>
           </label>
         );
       })}
-    </div>
+    </aside>
   );
 }
