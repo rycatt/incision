@@ -42,7 +42,7 @@ export default function ModelPreview({ path }: { path: string }) {
       <directionalLight position={[3, 5, 4]} intensity={1.2} />
       <directionalLight position={[-4, 2, -3]} intensity={0.4} />
       <Suspense fallback={null}>
-        <Bounds fit clip observe margin={1.2}>
+        <Bounds fit clip observe margin={1.5}>
           <Turntable>
             <Center>
               <ClayModel path={path} />
