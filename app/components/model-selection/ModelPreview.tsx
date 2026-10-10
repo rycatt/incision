@@ -1,21 +1,14 @@
 'use client';
 
 import { Canvas, useFrame } from '@react-three/fiber';
-import { useGLTF, Bounds, Center } from '@react-three/drei';
+import { useGLTF, Bounds, Center, Environment } from '@react-three/drei';
 import { Suspense, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 
-const clay = new THREE.MeshStandardMaterial({ color: '#c4c4c4', roughness: 0.85 });
-
-function ClayModel({ path }: { path: string }) {
+function PreviewModel({ path }: { path: string }) {
   const { scene } = useGLTF(path);
-  const model = useMemo(() => {
-    const copy = scene.clone(true);
-    copy.traverse((obj) => {
-      if (obj instanceof THREE.Mesh) obj.material = clay;
-    });
-    return copy;
-  }, [scene]);
+  // Clone so the turntable doesn't move the viewer's cached copy of the scene
+  const model = useMemo(() => scene.clone(true), [scene]);
 
   return <primitive object={model} />;
 }
@@ -38,14 +31,16 @@ export default function ModelPreview({ path }: { path: string }) {
       dpr={[1, 2]}
       style={{ pointerEvents: 'none' }}
     >
-      <ambientLight intensity={0.6} />
-      <directionalLight position={[3, 5, 4]} intensity={1.2} />
-      <directionalLight position={[-4, 2, -3]} intensity={0.4} />
+      {/* Same lighting as the viewer so textures look the same in both */}
+      <ambientLight intensity={1.5} />
+      <directionalLight position={[3, 5, 4]} intensity={2} />
+      <directionalLight position={[-3, 2, -4]} intensity={1} />
+      <Environment preset="studio" />
       <Suspense fallback={null}>
         <Bounds fit clip observe margin={1.5}>
           <Turntable>
             <Center>
-              <ClayModel path={path} />
+              <PreviewModel path={path} />
             </Center>
           </Turntable>
         </Bounds>

@@ -5,12 +5,12 @@ import EmptyWorkspace from './EmptyWorkspace';
 
 const MODELS = [
   { name: 'Duck', category: 'Vertebrate', path: '/models/duck.glb', href: '/' },
-  { name: 'Benchy', category: '3D Print', path: '/models/Benchy.glb', href: '/' },
+  { name: 'Bench', category: '3D Print', path: '/models/Bench.glb', href: '/' },
 ];
 
 export default function ModelGallery() {
   return (
-    <main className="h-dvh overflow-hidden bg-slate-50">
+    <main className="h-dvh overflow-hidden bg-background">
       <aside className="fixed inset-y-4 left-4 flex w-[calc(100%-2rem)] max-w-104.5 flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-xl sm:inset-y-6 sm:left-6">
         <header className="shrink-0 px-6 pt-6 pb-5">
           <h1 className="text-[28px] font-bold leading-tight text-neutral-900">
@@ -29,7 +29,7 @@ export default function ModelGallery() {
             aria-label={`Explore the ${model.name.toLowerCase()} model`}
             className="group flex h-81.25 w-full max-w-92.5 shrink-0 flex-col overflow-hidden rounded-[14px] border border-blue-300 bg-white transition-all duration-200 hover:border-blue-500 hover:shadow-lg hover:shadow-blue-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
           >
-            <div className="h-[70%] bg-neutral-50">
+            <div className="h-[70%] bg-background">
               <div className="h-full w-full transition-transform duration-500 ease-out group-hover:scale-110">
                 <ModelPreview path={model.path} />
               </div>
