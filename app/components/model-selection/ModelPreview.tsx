@@ -22,11 +22,18 @@ function Turntable({ children }: { children: React.ReactNode }) {
   return <group ref={ref}>{children}</group>;
 }
 
-export default function ModelPreview({ path }: { path: string }) {
+export default function ModelPreview({
+  path,
+  active = true,
+}: {
+  path: string;
+  active?: boolean;
+}) {
   return (
     <Canvas
       camera={{ position: [0, 1, 4], fov: 35 }}
       dpr={[1, 2]}
+      frameloop={active ? 'always' : 'never'}
       style={{ pointerEvents: 'none' }}
     >
       <ambientLight intensity={1.5} />

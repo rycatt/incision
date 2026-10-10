@@ -24,5 +24,7 @@ export default function useVisibility() {
     });
   };
 
-  return { visibility, toggle, toggleGroup };
+  const reset = () => setVisibility({});
+
+  return { visibility, toggle, toggleGroup, reset };
 }

@@ -1,28 +1,43 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import type { ThreeEvent } from '@react-three/fiber';
-import { useGLTF } from '@react-three/drei';
+import { useState, useEffect, useMemo, useRef } from 'react';
+import { useFrame, type ThreeEvent } from '@react-three/fiber';
+import { useGLTF, useBounds } from '@react-three/drei';
+import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import * as THREE from 'three';
 import { MODEL_CONFIG, GHOST_OPACITY } from '../../config/model';
+import { LAYERS, FADE_BAND, FADE_SPEED } from '../../config/layers';
 
 export default function Model({
+  path,
   selected,
   onSelect,
   visibility,
   onMeshesLoaded,
 }: {
+  path: string;
   selected: string | null;
   onSelect: (id: string | null) => void;
   visibility: Record<string, boolean>;
   onMeshesLoaded: (names: string[]) => void;
 }) {
-  const gltf = useGLTF(MODEL_CONFIG.path);
+  const gltf = useGLTF(path);
+  const scene = useMemo(() => gltf.scene.clone(true), [gltf.scene]);
   const [hovered, setHovered] = useState<THREE.Object3D | null>(null);
+  const bounds = useBounds();
+  const homeDistance = useRef<number | null>(null);
+
+  const fadeAtByName = useMemo(() => {
+    const map = new Map<string, number>();
+    LAYERS.forEach((layer) =>
+      layer.members.forEach((name) => map.set(name, layer.fadeAt))
+    );
+    return map;
+  }, []);
 
   useEffect(() => {
     const names: string[] = [];
-    gltf.scene.traverse((obj) => {
+    scene.traverse((obj) => {
       if (obj instanceof THREE.Mesh) {
         obj.userData.organId = obj.name;
         if (!obj.userData.originalMaterial) {
@@ -35,10 +50,10 @@ export default function Model({
     });
     console.log('Mesh names in this GLB:', names);
     onMeshesLoaded(names);
-  }, [gltf]);
+  }, [scene]);
 
   useEffect(() => {
-    gltf.scene.traverse((obj) => {
+    scene.traverse((obj) => {
       if (!(obj instanceof THREE.Mesh)) return;
 
       if (!obj.userData.ownedMaterial) {
@@ -53,13 +68,7 @@ export default function Model({
       const isSelected = id === selected;
       const isHovered = hovered?.userData.organId === id;
 
-      const wasTransparent = mat.transparent;
-      mat.transparent = !isVisible;
-      mat.opacity = isVisible ? 1 : GHOST_OPACITY;
-      mat.depthWrite = isVisible;
-      if (wasTransparent !== mat.transparent) {
-        mat.needsUpdate = true;
-      }
+      obj.userData.baseOpacity = isVisible ? 1 : GHOST_OPACITY;
 
       if ('emissive' in mat) {
         if (isSelected) {
@@ -74,11 +83,50 @@ export default function Model({
         }
       }
     });
-  }, [gltf, selected, hovered, visibility]);
+  }, [scene, selected, hovered, visibility]);
+
+  useFrame(({ camera, controls }, delta) => {
+    const target = (controls as OrbitControlsImpl | null)?.target;
+    if (!target) return;
+
+    homeDistance.current ??= bounds.refresh().getSize().distance;
+    const zoom = camera.position.distanceTo(target) / homeDistance.current;
+
+    scene.traverse((obj) => {
+      if (!(obj instanceof THREE.Mesh) || !obj.userData.ownedMaterial) return;
+
+      const mat = obj.userData.ownedMaterial as THREE.MeshStandardMaterial;
+      const fadeAt = fadeAtByName.get(obj.userData.organId);
+      const goal =
+        fadeAt === undefined
+          ? 1
+          : THREE.MathUtils.smoothstep(zoom, fadeAt - FADE_BAND, fadeAt);
+      const fade = THREE.MathUtils.damp(
+        obj.userData.zoomFade ?? 1,
+        goal,
+        FADE_SPEED,
+        delta
+      );
+      obj.userData.zoomFade = fade;
+
+      const opacity = (obj.userData.baseOpacity ?? 1) * fade;
+      const transparent = opacity < 0.999;
+      if (mat.transparent !== transparent) {
+        mat.transparent = transparent;
+        mat.needsUpdate = true;
+      }
+      mat.opacity = opacity;
+      mat.depthWrite = !transparent;
+
+      const shown = fade > 0.01;
+      obj.visible = shown;
+      obj.raycast = shown ? THREE.Mesh.prototype.raycast : () => {};
+    });
+  });
 
   return (
     <primitive
-      object={gltf.scene}
+      object={scene}
       position={MODEL_CONFIG.position}
       rotation={MODEL_CONFIG.rotation}
       scale={MODEL_CONFIG.scale}

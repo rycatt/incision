@@ -19,7 +19,7 @@ export default function Sidebar({
   const visibleGroups = GROUPS.filter((g) => g.members.length > 0);
 
   return (
-    <aside className="fixed top-6 right-6 z-10 max-h-[calc(100%-3rem)] w-64 overflow-y-auto overscroll-contain rounded-2xl border border-slate-200 bg-white/95 p-6 shadow-xl backdrop-blur">
+    <aside className="max-h-[calc(100dvh-8rem)] w-64 overflow-y-auto overscroll-contain rounded-2xl border border-slate-200 bg-white/95 p-6 backdrop-blur">
       {visibleGroups.length > 0 && (
         <>
           <h2 className={SECTION_HEADER}>Systems</h2>
