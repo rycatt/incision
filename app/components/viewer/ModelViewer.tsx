@@ -165,6 +165,7 @@ export default function ModelViewer({
                 visibility={visibility}
                 onMeshesLoaded={onMeshesLoaded}
                 interactive={!tourActive}
+                focusParts={tourActive ? tourTargets : null}
               />
             </Center>
             <FocusOnSelect
@@ -177,7 +178,7 @@ export default function ModelViewer({
         </Suspense>
       )}
 
-      <OrbitControls makeDefault enabled={!tourActive} />
+      <OrbitControls makeDefault enabled={!tourActive} zoomSpeed={1.8} />
     </Canvas>
   );
 }

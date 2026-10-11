@@ -26,5 +26,5 @@ export default function useVisibility() {
 
   const reset = () => setVisibility({});
 
-  return { visibility, toggle, toggleGroup, reset };
+  return { visibility, setVisibility, toggle, toggleGroup, reset };
 }

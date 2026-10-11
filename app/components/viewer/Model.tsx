@@ -5,6 +5,7 @@ import { useFrame, type ThreeEvent } from '@react-three/fiber';
 import { useGLTF, useBounds } from '@react-three/drei';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import * as THREE from 'three';
+import { acceleratedRaycast, computeBoundsTree } from 'three-mesh-bvh';
 import {
   MODEL_CONFIG,
   GHOST_OPACITY,
@@ -14,6 +15,7 @@ import {
   HOVER_SPEED,
 } from '../../data/settings';
 import { LAYERS, FADE_BAND, FADE_SPEED } from '../../data/layers';
+import type { Layer } from '../../lib/types';
 
 const HOVER_COLOR = new THREE.Color(HIGHLIGHT_COLORS.hover);
 const SCRATCH_COLOR = new THREE.Color();
@@ -30,7 +32,8 @@ export default function Model({
   onSelect,
   visibility,
   onMeshesLoaded,
-  interactive = true
+  interactive = true,
+  focusParts = null,
 }: {
   path: string;
   selected: string | null;
@@ -39,6 +42,7 @@ export default function Model({
   onMeshesLoaded: (names: string[]) => void;
   onSceneLoaded?: (s: THREE.Object3D) => void;
   interactive?: boolean;
+  focusParts?: string[] | null;
 }) {
   const gltf = useGLTF(path);
   const scene = useMemo(() => gltf.scene.clone(true), [gltf.scene]);
@@ -47,6 +51,7 @@ export default function Model({
     scene.traverse((obj) => {
       if (obj instanceof THREE.Mesh) {
         obj.userData.isPart = true;
+        if (!obj.geometry.boundsTree) computeBoundsTree.call(obj.geometry);
         meshes.push(obj);
       }
     });
@@ -57,11 +62,9 @@ export default function Model({
   const bounds = useBounds();
   const homeDistance = useRef<number | null>(null);
 
-  const fadeAtByName = useMemo(() => {
-    const map = new Map<string, number>();
-    LAYERS.forEach((layer) =>
-      layer.members.forEach((name) => map.set(name, layer.fadeAt))
-    );
+  const layerByName = useMemo(() => {
+    const map = new Map<string, Layer>();
+    LAYERS.forEach((layer) => layer.members.forEach((name) => map.set(name, layer)));
     return map;
   }, []);
 
@@ -85,7 +88,8 @@ export default function Model({
   }, [parts]);
 
   useEffect(() => {
-    const hasSelection = !!selected && parts.some((part) => part.name === selected);
+    const focus = selected ? [selected] : focusParts ?? [];
+    const hasFocus = focus.some((name) => parts.some((part) => part.name === name));
 
     parts.forEach((obj) => {
       if (!obj.userData.ownedMaterial) {
@@ -103,15 +107,16 @@ export default function Model({
 
       const id = obj.userData.organId as string;
       const isVisible = visibility[id] !== false;
-      const isSelected = id === selected;
+      const isSelected = focus.includes(id);
       const isHovered = activeHover?.userData.organId === id;
 
       obj.userData.baseOpacity = isVisible ? 1 : GHOST_OPACITY;
+      obj.userData.layerVisible = isVisible;
       obj.userData.selectTarget = isSelected ? 1 : 0;
       obj.userData.hoverTarget = isHovered && isVisible && !isSelected ? 1 : 0;
-      obj.userData.dimTarget = hasSelection && !isSelected ? 1 : 0;
+      obj.userData.dimTarget = hasFocus && !isSelected ? 1 : 0;
     });
-  }, [parts, selected, activeHover, visibility]);
+  }, [parts, selected, focusParts, activeHover, visibility]);
 
   useFrame(({ camera, controls }, delta) => {
     const target = (controls as OrbitControlsImpl | null)?.target;
@@ -124,12 +129,12 @@ export default function Model({
       if (!obj.userData.ownedMaterial) return;
 
       const mat = obj.userData.ownedMaterial as THREE.MeshStandardMaterial;
-      const fadeAt = fadeAtByName.get(obj.userData.organId);
+      const layer = layerByName.get(obj.userData.organId);
       const inSelection = obj.userData.selectTarget === 1 || obj.userData.dimTarget === 1;
       const goal =
-        fadeAt === undefined || inSelection
+        layer === undefined || inSelection
           ? 1
-          : THREE.MathUtils.smoothstep(zoom, fadeAt - FADE_BAND, fadeAt);
+          : THREE.MathUtils.smoothstep(zoom, layer.fadeAt - FADE_BAND, layer.fadeAt);
       const fade = THREE.MathUtils.damp(
         obj.userData.zoomFade ?? 1,
         goal,
@@ -137,6 +142,7 @@ export default function Model({
         delta
       );
       obj.userData.zoomFade = fade;
+      const zoomOpacity = THREE.MathUtils.lerp(layer?.minOpacity ?? 0, 1, fade);
 
       const hoverMix = THREE.MathUtils.damp(
         obj.userData.hoverMix ?? 0,
@@ -165,7 +171,7 @@ export default function Model({
       const dimOpacity = THREE.MathUtils.lerp(1, UNSELECTED_OPACITY, dimMix);
       const opacity = isSelected
         ? 1
-        : (obj.userData.baseOpacity ?? 1) * fade * dimOpacity;
+        : (obj.userData.baseOpacity ?? 1) * zoomOpacity * dimOpacity;
       const transparent = isSelected || opacity < 0.999;
       if (mat.transparent !== transparent) {
         mat.transparent = transparent;
@@ -175,9 +181,12 @@ export default function Model({
       mat.depthWrite = isSelected || !transparent;
       obj.renderOrder = isSelected ? 10 : 0;
 
-      const shown = fade > 0.01;
+      const shown = zoomOpacity > 0.01;
+      const clickable = shown && fade > 0.5 && obj.userData.dimTarget !== 1;
       obj.visible = shown;
-      obj.raycast = shown ? THREE.Mesh.prototype.raycast : () => {};
+      obj.raycast = clickable && obj.userData.layerVisible !== false
+        ? acceleratedRaycast
+        : () => {};
     });
   });
 

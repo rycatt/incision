@@ -17,6 +17,8 @@
   --color-accent-hover: #2c2b4d;
   --color-accent-soft: #ecebf2;
   --color-accent-fg: #ffffff;
+
+  --color-danger: #b42318;
 }
 
 @theme inline {
@@ -77,6 +79,7 @@ body {
     var(--color-ink-200) 100%
   );
 }
+
 
 
 

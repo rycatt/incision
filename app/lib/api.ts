@@ -1,6 +1,28 @@
-import type { ChatMessage } from './types';
+import type { ChatMessage, ModelContent } from './types';
+import { EMPTY_CONTENT } from '../data/defaults';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000';
+
+const contentCache = new Map<string, Promise<ModelContent>>();
+
+export function fetchModelContent(slug: string): Promise<ModelContent> {
+  const cached = contentCache.get(slug);
+  if (cached) return cached;
+
+  const request = fetch(`${API_URL}/models/${slug}/content`)
+    .then((res) => {
+      if (!res.ok) throw new Error(`Content request failed: ${res.status}`);
+      return res.json() as Promise<ModelContent>;
+    })
+    .catch((error) => {
+      console.warn(`Using built-in defaults for "${slug}":`, error);
+      contentCache.delete(slug);
+      return EMPTY_CONTENT;
+    });
+
+  contentCache.set(slug, request);
+  return request;
+}
 
 export async function sendChatMessage(
   model: string,

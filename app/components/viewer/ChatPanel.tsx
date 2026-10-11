@@ -48,10 +48,6 @@ export default function ChatPanel({
   const abortRef = useRef<AbortController | null>(null);
 
   const subject = modelName.toLowerCase();
-  const suggestions = [
-    selectedPart ? `What does the ${selectedPart} do?` : `How does a ${subject} breathe?`,
-    `How is a ${subject} different from a human?`,
-  ];
 
   useEffect(() => () => abortRef.current?.abort(), []);
 
@@ -116,7 +112,7 @@ export default function ChatPanel({
             onKeyDown={(event) => {
               if (event.key === 'Escape') setOpen(false);
             }}
-            className="absolute right-0 bottom-full mb-3 flex h-[min(28rem,calc(100dvh-8rem))] w-[min(22rem,calc(100vw-3rem))] flex-col overflow-hidden rounded-2xl panel"
+            className="absolute right-0 bottom-full mb-3 flex h-[minrem,calc(100dvh-8rem))] w-[min(22rem,calc(100vw-3rem))] flex-col overflow-hidden rounded-2xl panel"
           >
             <header className="flex items-center justify-between border-b border-line px-4 py-3">
               <div>
@@ -184,21 +180,6 @@ export default function ChatPanel({
                     Retry
                   </button>
                 </p>
-              )}
-
-              {messages.length === 0 && !pending && (
-                <div className="flex flex-wrap gap-2 pt-1">
-                  {suggestions.map((suggestion) => (
-                    <button
-                      key={suggestion}
-                      type="button"
-                      onClick={() => send(suggestion)}
-                      className="cursor-pointer rounded-full border border-line px-3 py-1.5 text-xs text-ink-900 transition-colors hover:border-accent/40 hover:bg-ink-100 hover:text-ink-900"
-                    >
-                      {suggestion}
-                    </button>
-                  ))}
-                </div>
               )}
             </div>
 

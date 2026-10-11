@@ -1,0 +1,122 @@
+{
+  "parts": {
+    "Skin": {
+      "label": "Skin",
+      "description": "A thin, moist layer covering the whole body. Frogs can breathe through their skin, absorbing oxygen directly into the blood vessels just beneath it, which is why it must stay damp. It also absorbs water, so frogs rarely need to drink."
+    },
+    "Heart": {
+      "label": "Heart",
+      "description": "A three-chambered heart with two atria and one ventricle. The right atrium receives oxygen-poor blood from the body and the left atrium receives oxygen-rich blood from the lungs and skin. Both empty into the single ventricle, which pumps blood out to the lungs, skin, and the rest of the body."
+    },
+    "Lungs": {
+      "label": "Lungs",
+      "description": "A pair of thin-walled, balloon-like sacs used for breathing on land. Frogs have no diaphragm, so they push air into the lungs by raising and lowering the floor of the mouth. The lungs share the work of gas exchange with the skin."
+    },
+    "Liver": {
+      "label": "Liver",
+      "description": "The largest organ in the body cavity, made of several reddish-brown lobes. It produces bile to help digest fats, stores nutrients such as glycogen, and removes toxins from the blood."
+    },
+    "Gallbladder": {
+      "label": "Gallbladder",
+      "description": "A small green sac tucked between the lobes of the liver. It stores bile made by the liver and releases it into the small intestine to help break down fats."
+    },
+    "Pancreas": {
+      "label": "Pancreas",
+      "description": "A thin, pale organ lying along the curve of the stomach and small intestine. It releases digestive enzymes into the small intestine and produces hormones such as insulin that control blood sugar."
+    },
+    "Esophagus": {
+      "label": "Esophagus",
+      "description": "A short muscular tube connecting the mouth to the stomach. Frogs swallow prey whole, and muscle contractions push food down the esophagus into the stomach."
+    },
+    "Stomach": {
+      "label": "Stomach",
+      "description": "A curved, J-shaped organ on the left side of the body cavity. Its muscular walls churn food while acids and enzymes begin breaking down proteins, before passing the food on to the small intestine."
+    },
+    "SmallIntestine": {
+      "label": "Small Intestine",
+      "description": "A long, coiled tube where most digestion and nutrient absorption take place. Bile from the gallbladder and enzymes from the pancreas mix with food here, and nutrients pass through its walls into the blood."
+    },
+    "LargeIntestine": {
+      "label": "Large Intestine",
+      "description": "A short, wide tube at the end of the digestive tract. It absorbs water from undigested material and stores waste before it leaves the body through the cloaca."
+    },
+    "Kidneys": {
+      "label": "Kidneys",
+      "description": "A pair of long, dark red organs lying against the back wall of the body cavity. They filter waste from the blood and produce urine, and they help balance the water and salts in the frog's body."
+    },
+    "Spleen": {
+      "label": "Spleen",
+      "description": "A small, round, dark red organ near the intestines. It is part of the immune and circulatory systems, filtering the blood, removing old red blood cells, and storing blood cells for later use."
+    }
+  },
+  "groups": [
+    {
+      "id": "digestive",
+      "label": "Digestive System",
+      "members": [
+        "Esophagus",
+        "Stomach",
+        "SmallIntestine",
+        "LargeIntestine",
+        "Liver",
+        "Gallbladder",
+        "Pancreas"
+      ]
+    },
+    {
+      "id": "circulatory",
+      "label": "Circulatory System",
+      "members": [
+        "Heart",
+        "Spleen"
+      ]
+    },
+    {
+      "id": "respiratory",
+      "label": "Respiratory System",
+      "members": [
+        "Lungs"
+      ]
+    },
+    {
+      "id": "urinary",
+      "label": "Urinary System",
+      "members": [
+        "Kidneys"
+      ]
+    },
+    {
+      "id": "external",
+      "label": "External Anatomy",
+      "members": [
+        "Skin"
+      ]
+    }
+  ],
+  "tour": [
+    {
+      "title": "Welcome!",
+      "targets": [],
+      "body": "This short tour visits two key organs: the heart and the stomach. Use Next and Back to move between steps, or Skip to explore on your own."
+    },
+    {
+      "title": "Heart",
+      "targets": [
+        "Heart"
+      ],
+      "body": "The frog heart has three chambers: two atria and one ventricle. The ventricle pumps blood to the lungs and skin to pick up oxygen, and out to the rest of the body."
+    },
+    {
+      "title": "Stomach",
+      "targets": [
+        "Stomach"
+      ],
+      "body": "Frogs swallow prey whole. Food slides down the esophagus into the J-shaped stomach, where strong muscles churn it and acids and enzymes start breaking it down."
+    },
+    {
+      "title": "Your turn",
+      "targets": [],
+      "body": "That's the tour! Click any organ to read about it and try Quiz me, or use the panel on the right to show and hide body systems."
+    }
+  ]
+}

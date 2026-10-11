@@ -1,11 +1,18 @@
 import { X } from 'lucide-react';
 import type { OrganInfo } from '../../lib/types';
+import PartQuiz from './PartQuiz';
 
 export default function InfoPanel({
   part,
+  partId,
+  quizLabel,
+  modelName,
   onClose,
 }: {
   part: OrganInfo | null;
+  partId: string;
+  quizLabel: string;
+  modelName: string;
   onClose: () => void;
 }) {
   if (!part) return null;
@@ -30,6 +37,8 @@ export default function InfoPanel({
       <p className="mt-3 text-[15px] leading-relaxed text-ink-900">
         {part.description}
       </p>
+
+      <PartQuiz key={`${modelName}:${partId}`} modelName={modelName} partLabel={quizLabel} />
     </aside>
   );
 }

@@ -11,6 +11,7 @@ export default function TourCard({
     total,
     isLast,
     onNext,
+    onBack,
     onSkip,
     onFinish,
   }: {
@@ -19,6 +20,7 @@ export default function TourCard({
     total: number;
     isLast: boolean;
     onNext: () => void;
+    onBack: () => void;
     onSkip: () => void;
     onFinish: () => void;
   }) {
@@ -38,7 +40,7 @@ export default function TourCard({
             <button
               type="button"
               onClick={onSkip}
-              className="text-[11px] text-ink-600 underline-offset-2 hover:text-ink-900 hover:underline"
+              className="cursor-pointer text-[11px] text-ink-600 underline-offset-2 hover:text-ink-900 hover:underline"
             >
               Skip
             </button>
@@ -66,6 +68,16 @@ export default function TourCard({
             ))}
           </div>
   
+          <div className="flex items-center gap-2">
+          {index > 0 && (
+            <button
+              type="button"
+              onClick={onBack}
+              className="cursor-pointer rounded-lg px-3 py-2 text-sm font-medium text-ink-700 transition-colors hover:bg-ink-100 hover:text-ink-900"
+            >
+              Back
+            </button>
+          )}
           {isLast ? (
             <button
               type="button"
@@ -78,11 +90,12 @@ export default function TourCard({
             <button
               type="button"
               onClick={onNext}
-              className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-accent-fg transition-colors hover:bg-accent-hover"
+              className="cursor-pointer rounded-lg bg-accent px-4 py-2 text-sm font-medium text-accent-fg transition-colors hover:bg-accent-hover"
             >
               Next
             </button>
           )}
+          </div>
         </div>
       </motion.div>
     );

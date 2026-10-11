@@ -1,8 +1,6 @@
 'use client';
 
-import { GROUPS } from '../../data/groups';
-import { ORGAN_INFO } from '../../data/organInfo';
-import type { Group } from '../../lib/types';
+import type { Group, OrganInfo } from '../../lib/types';
 
 const SECTION_HEADER =
   'mb-3 text-xs font-medium tracking-widest text-accent uppercase';
@@ -18,16 +16,20 @@ const LABEL_OFF = 'text-sm text-ink-400 transition-colors';
 
 export default function Sidebar({
   meshes,
+  parts,
+  groups,
   visibility,
   onToggle,
   onToggleGroup,
 }: {
   meshes: string[];
+  parts: Record<string, OrganInfo>;
+  groups: Group[];
   visibility: Record<string, boolean>;
   onToggle: (name: string) => void;
   onToggleGroup: (group: Group) => void;
 }) {
-  const visibleGroups = GROUPS.filter((g) => g.members.length > 0);
+  const visibleGroups = groups.filter((g) => g.members.length > 0);
 
   return (
     <aside className="max-h-[calc(100dvh-8rem)] w-64 overflow-y-auto overscroll-contain rounded-2xl panel-muted p-6">
@@ -73,7 +75,7 @@ export default function Sidebar({
 
       {meshes.map((name) => {
         const isVisible = visibility[name] !== false;
-        const label = ORGAN_INFO[name]?.label ?? name;
+        const label = parts[name]?.label ?? name;
         return (
           <label key={name} className={ROW}>
             <input
