@@ -1,7 +1,9 @@
 import type { ChatMessage, ModelContent } from './types';
 import { EMPTY_CONTENT } from '../data/defaults';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000';
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL ??
+  (process.env.NODE_ENV === 'development' ? 'http://localhost:8000/api' : '/api');
 
 const contentCache = new Map<string, Promise<ModelContent>>();
 

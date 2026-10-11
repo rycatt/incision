@@ -20,10 +20,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(content.router)
-app.include_router(chat.router)
+app.include_router(content.router, prefix="/api")
+app.include_router(chat.router, prefix="/api")
 
 
-@app.get("/")
+@app.get("/api")
 def root():
     return {"message": "Backend is running"}

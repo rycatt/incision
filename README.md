@@ -50,7 +50,7 @@ npm run dev
 
 Then open http://localhost:3000.
 
-The frontend expects the API at `http://localhost:8000`. If yours runs somewhere else, set `NEXT_PUBLIC_API_URL` in a `.env.local` file in the project root.
+In development the frontend calls the API at `http://localhost:8000/api`. In production it calls `/api` on the same domain. To point it somewhere else, set `NEXT_PUBLIC_API_URL` in a `.env.local` file in the project root.
 
 If the backend isn't running, the 3D viewer still works, but organ descriptions, body systems, the tour and Quiz me will be empty or unavailable.
 
@@ -58,9 +58,13 @@ If the backend isn't running, the 3D viewer still works, but organ descriptions,
 
 | Method | Path | Purpose |
 | --- | --- | --- |
-| GET | `/` | Health check |
-| GET | `/models/{slug}/content` | Parts, groups and tour for a model. Returns empty lists if the model has no content file. |
-| POST | `/chat` | Sends a conversation to Gemini, along with the selected part's notes. Quiz me uses this. |
+| GET | `/api` | Health check |
+| GET | `/api/models/{slug}/content` | Parts, groups and tour for a model. Returns empty lists if the model has no content file. |
+| POST | `/api/chat` | Sends a conversation to Gemini, along with the selected part's notes. Quiz me uses this. |
+
+## Deployment
+
+The site and the backend deploy together as one Vercel project using [Vercel Services](https://vercel.com/docs/services), configured in `vercel.json`. Requests to `/api/*` go to the FastAPI backend, and everything else goes to the Next.js app. Set `GEMINI_API_KEY` in the Vercel project's environment variables.
 
 ## Adding a model
 
