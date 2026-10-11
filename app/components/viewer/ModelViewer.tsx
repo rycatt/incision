@@ -1,8 +1,8 @@
 'use client';
 
-import { Suspense, useEffect, useRef, useState } from 'react';
+import { Suspense, useEffect, useRef, useState, type RefObject } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls, Environment, Center, Bounds, useBounds, useGLTF } from '@react-three/drei';
+import { OrbitControls, Environment, Center, Bounds, Grid, useBounds, useGLTF } from '@react-three/drei';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import * as THREE from 'three';
 import Model from './Model';
@@ -12,6 +12,41 @@ const ZOOM_AMOUNT = 1;
 const SMOOTHING = 4;
 const FLY_IN_DISTANCE = 2.5;
 const DEFAULT_DIRECTION = new THREE.Vector3(0, 0, 1);
+const FLOOR_GAP = 0.0;
+
+function GridFloor({ target }: { target: RefObject<THREE.Group | null> }) {
+  const ref = useRef<THREE.Mesh>(null);
+  const placed = useRef(false);
+
+  useFrame(() => {
+    if (placed.current || !target.current || !ref.current) return;
+    const box = new THREE.Box3().setFromObject(target.current);
+    if (box.isEmpty()) return;
+    const center = box.getCenter(new THREE.Vector3());
+    const height = box.max.y - box.min.y;
+    ref.current.position.set(center.x, box.min.y - height * FLOOR_GAP, center.z);
+    ref.current.visible = true;
+    placed.current = true;
+  });
+
+  return (
+    <Grid
+      ref={ref}
+      visible={false}
+      raycast={() => null}
+      infiniteGrid
+      cellSize={0.35}
+      cellThickness={0.9}
+      cellColor="#94a3b8"
+      sectionSize={1}
+      sectionThickness={1.3}
+      sectionColor="#64748b"
+      fadeDistance={9}
+      fadeStrength={2.5}
+      fadeFrom={0}
+    />
+  );
+}
 
 function FocusOnSelect({
   selected,
@@ -142,6 +177,7 @@ export default function ModelViewer({
 }) {
   const [attempt, setAttempt] = useState(0);
   const [loadedPath, setLoadedPath] = useState<string | null>(null);
+  const modelRef = useRef<THREE.Group>(null);
   const loading = !!path && loadedPath !== path;
 
   return (
@@ -173,7 +209,7 @@ export default function ModelViewer({
           {path && (
             <Suspense key={path} fallback={null}>
               <Bounds margin={1.2}>
-                <Center>
+                <Center ref={modelRef}>
                   <Model
                     path={path}
                     selected={selected}
@@ -191,6 +227,7 @@ export default function ModelViewer({
                   tourActive={tourActive}
                 />
               </Bounds>
+              <GridFloor target={modelRef} />
               <OnLoaded onLoad={() => setLoadedPath(path)} />
             </Suspense>
           )}
