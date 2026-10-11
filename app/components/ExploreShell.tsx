@@ -61,29 +61,36 @@ export default function ExploreShell({ children }: { children: ReactNode }) {
   const tourStep = tour[tourIndex];
   const isLastStep = tourIndex === tour.length - 1;
   const touring = !!model && mode === 'tour';
+  const organStep = !!tourStep?.targets.length;
 
   return (
     <MotionConfig reducedMotion="user">
       <main className="relative h-dvh w-full overflow-hidden bg-app">
-      <AnimatePresence>
-  {touring && contentReady && (
-    <motion.div
-      key="tour-card"
-      className="pointer-events-none fixed inset-x-0 bottom-8 z-20 flex justify-center px-4"
-    >
-      <TourCard
-        step={tourStep}
-        index={tourIndex}
-        total={tour.length}
-        isLast={isLastStep}
-        onNext={() => setTourIndex((i) => Math.min(i + 1, tour.length - 1))}
-        onBack={() => setTourIndex((i) => Math.max(i - 1, 0))}
-        onSkip={() => setMode('explore')}
-        onFinish={() => setMode('explore')}
-      />
-    </motion.div>
-  )}
-</AnimatePresence>
+        <AnimatePresence>
+          {touring && contentReady && (
+            <motion.div
+              key="tour-card"
+              className={`pointer-events-none fixed inset-0 z-20 flex px-4 ${
+                organStep
+                  ? 'items-end justify-center pb-8 md:items-center md:justify-start md:pb-0 md:pl-6'
+                  : 'items-end justify-center pb-8'
+              }`}
+            >
+              <motion.div layout="position" transition={SLIDE}>
+                <TourCard
+                  step={tourStep}
+                  index={tourIndex}
+                  total={tour.length}
+                  isLast={isLastStep}
+                  onNext={() => setTourIndex((i) => Math.min(i + 1, tour.length - 1))}
+                  onBack={() => setTourIndex((i) => Math.max(i - 1, 0))}
+                  onSkip={() => setMode('explore')}
+                  onFinish={() => setMode('explore')}
+                />
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
         <motion.div
           className="absolute inset-0"
           style={{ pointerEvents: model && !touring ? 'auto' : 'none' }}
