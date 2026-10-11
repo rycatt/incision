@@ -2,10 +2,11 @@
 
 import { Suspense, useEffect, useRef, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls, Environment, Center, Bounds, useBounds } from '@react-three/drei';
+import { OrbitControls, Environment, Center, Bounds, useBounds, useGLTF } from '@react-three/drei';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import * as THREE from 'three';
 import Model from './Model';
+import { ModelErrorBoundary, ModelLoader, OnLoaded } from './ModelStatus';
 
 const ZOOM_AMOUNT = 1;
 const SMOOTHING = 4;
@@ -139,46 +140,65 @@ export default function ModelViewer({
   tourTargets: string[] | null;
   tourActive: boolean;
 }) {
+  const [attempt, setAttempt] = useState(0);
+  const [loadedPath, setLoadedPath] = useState<string | null>(null);
+  const loading = !!path && loadedPath !== path;
+
   return (
-    <Canvas
-      camera={{ position: [0, 0, 5], fov: 30 }}
-      gl={{ antialias: true }}
-      frameloop={active ? 'always' : 'demand'}
-      style={{ pointerEvents: tourActive ? 'none' : 'auto' }}
-      onPointerMissed={() => {
-        if (!tourActive) onSelect(null);
+    <ModelErrorBoundary
+      key={attempt}
+      onRetry={() => {
+        if (path) useGLTF.clear(path);
+        setLoadedPath(null);
+        setAttempt((n) => n + 1);
       }}
     >
-      <ambientLight intensity={0.8} />
-      <directionalLight position={[3, 5, 4]} intensity={1.4} />
-      <directionalLight position={[-3, 2, -4]} intensity={0.6} />
-      <Environment preset="studio" environmentIntensity={0.6} />
+      <div
+        className={`h-full w-full transition-opacity duration-700 ease-out ${loading ? 'opacity-0' : 'opacity-100'}`}
+      >
+        <Canvas
+          camera={{ position: [0, 0, 5], fov: 30 }}
+          gl={{ antialias: true }}
+          frameloop={active ? 'always' : 'demand'}
+          style={{ pointerEvents: tourActive ? 'none' : 'auto' }}
+          onPointerMissed={() => {
+            if (!tourActive) onSelect(null);
+          }}
+        >
+          <ambientLight intensity={0.8} />
+          <directionalLight position={[3, 5, 4]} intensity={1.4} />
+          <directionalLight position={[-3, 2, -4]} intensity={0.6} />
+          <Environment preset="studio" environmentIntensity={0.6} />
 
-      {path && (
-        <Suspense key={path} fallback={null}>
-          <Bounds margin={1.2}>
-            <Center>
-              <Model
-                path={path}
-                selected={selected}
-                onSelect={onSelect}
-                visibility={visibility}
-                onMeshesLoaded={onMeshesLoaded}
-                interactive={!tourActive}
-                focusParts={tourActive ? tourTargets : null}
-              />
-            </Center>
-            <FocusOnSelect
-              selected={selected}
-              resetSignal={resetSignal}
-              tourTargets={tourTargets}
-              tourActive={tourActive}
-            />
-          </Bounds>
-        </Suspense>
-      )}
+          {path && (
+            <Suspense key={path} fallback={null}>
+              <Bounds margin={1.2}>
+                <Center>
+                  <Model
+                    path={path}
+                    selected={selected}
+                    onSelect={onSelect}
+                    visibility={visibility}
+                    onMeshesLoaded={onMeshesLoaded}
+                    interactive={!tourActive}
+                    focusParts={tourActive ? tourTargets : null}
+                  />
+                </Center>
+                <FocusOnSelect
+                  selected={selected}
+                  resetSignal={resetSignal}
+                  tourTargets={tourTargets}
+                  tourActive={tourActive}
+                />
+              </Bounds>
+              <OnLoaded onLoad={() => setLoadedPath(path)} />
+            </Suspense>
+          )}
 
-      <OrbitControls makeDefault enabled={!tourActive} zoomSpeed={1.8} />
-    </Canvas>
+          <OrbitControls makeDefault enabled={!tourActive} zoomSpeed={1.8} />
+        </Canvas>
+      </div>
+      {loading && <ModelLoader />}
+    </ModelErrorBoundary>
   );
 }

@@ -47,6 +47,10 @@
     "Spleen": {
       "label": "Spleen",
       "description": "A small, round, dark red organ near the intestines. It is part of the immune and circulatory systems, filtering the blood, removing old red blood cells, and storing blood cells for later use."
+    },
+    "Bladder": {
+      "label": "Bladder",
+      "description": "A thin-walled, two-lobed sac attached to the cloaca. It stores urine and can reabsorb water back into the body, helping the frog avoid drying out on land."
     }
   },
   "groups": [
@@ -95,7 +99,7 @@
   ],
   "tour": [
     {
-      "title": "Welcome!",
+      "title": "Welcome",
       "targets": [],
       "body": "This short tour visits two key organs: the heart and the stomach. Use Next and Back to move between steps, or Skip to explore on your own."
     },

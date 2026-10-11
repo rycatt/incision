@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, ChevronLeft } from 'lucide-react';
 import ModelPreview from './ModelPreview';
 import { MODELS } from '../../data/models';
 
@@ -7,6 +7,13 @@ export default function ModelGallery({ active = true }: { active?: boolean }) {
   return (
     <aside className="panel-muted flex h-full flex-col overflow-hidden rounded-2xl">
       <header className="shrink-0 px-6 pt-6 pb-5">
+        <Link
+          href="/"
+          aria-label="Back to home"
+          className="panel mb-5 flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-ink-100"
+        >
+          <ChevronLeft className="h-5 w-5" />
+        </Link>
         <h1 className="text-[28px] font-bold leading-tight text-ink-900">
           Select a Model
         </h1>
