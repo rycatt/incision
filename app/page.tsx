@@ -8,13 +8,47 @@ const FACTS = [
   { value: '360°', label: 'rotation' },
 ];
 
+const HALFTONE_W = 900;
+const HALFTONE_H = 640;
+const HALFTONE_STEP = 13;
+const HALFTONE_MAX_R = 6.4;
+
+function halftonePath() {
+  let d = '';
+  for (let row = 0; row * HALFTONE_STEP <= HALFTONE_H; row++) {
+    const y = HALFTONE_H - row * HALFTONE_STEP;
+    const offset = row % 2 ? HALFTONE_STEP / 2 : 0;
+    for (let x = offset; x <= HALFTONE_W; x += HALFTONE_STEP) {
+      const t = Math.hypot(x / HALFTONE_W, (HALFTONE_H - y) / HALFTONE_H);
+      if (t >= 1) continue;
+      const jitter = 0.75 + 0.5 * Math.abs(Math.sin(x * 12.9898 + y * 78.233) * 43758.5453 % 1);
+      const r = HALFTONE_MAX_R * Math.pow(1 - t, 1.6) * jitter;
+      if (r < 0.35) continue;
+      const rr = r.toFixed(2);
+      d += `M${(x - r).toFixed(1)} ${y}a${rr} ${rr} 0 1 0 ${(2 * r).toFixed(2)} 0a${rr} ${rr} 0 1 0 ${(-2 * r).toFixed(2)} 0`;
+    }
+  }
+  return d;
+}
+
+const HALFTONE = halftonePath();
+
 export default function Home() {
   return (
-    <main className="bg-app min-h-dvh text-ink-900">
-      <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-8">
+    <main className="bg-app relative min-h-dvh overflow-hidden text-ink-900">
+      <svg
+        aria-hidden
+        viewBox={`0 0 ${HALFTONE_W} ${HALFTONE_H}`}
+        preserveAspectRatio="xMinYMax slice"
+        className="pointer-events-none absolute bottom-0 left-0 h-[70vh] w-[45vw] text-ink-900 opacity-[0.3]"
+      >
+        <path d={HALFTONE} fill="currentColor" />
+      </svg>
+
+      <header className="relative mx-auto flex max-w-6xl items-center justify-between px-6 py-8">
       </header>
 
-      <section className="mx-auto grid max-w-6xl items-center gap-12 px-6 pt-8 pb-20 lg:grid-cols-[1.05fr_1fr] lg:pt-14">
+      <section className="relative mx-auto grid max-w-6xl items-center gap-12 px-6 pt-8 pb-20 lg:grid-cols-[1.05fr_1fr] lg:pt-14">
         <div>
           <h1 className="font-semibold font-display text-7xl leading-none tracking-tight sm:text-8xl">
             Incision

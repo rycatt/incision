@@ -3,7 +3,13 @@ import { ArrowUpRight, ChevronLeft } from 'lucide-react';
 import ModelPreview from './ModelPreview';
 import { MODELS } from '../../data/models';
 
-export default function ModelGallery({ active = true }: { active?: boolean }) {
+export default function ModelGallery({
+  active = true,
+  onHover,
+}: {
+  active?: boolean;
+  onHover?: (slug: string | null) => void;
+}) {
   return (
     <aside className="panel-muted flex h-full flex-col overflow-hidden rounded-2xl">
       <header className="shrink-0 px-6 pt-6 pb-5">
@@ -28,6 +34,10 @@ export default function ModelGallery({ active = true }: { active?: boolean }) {
             key={model.slug}
             href={`/explore/${model.slug}`}
             aria-label={`Explore the ${model.name.toLowerCase()} model`}
+            onMouseEnter={() => onHover?.(model.slug)}
+            onMouseLeave={() => onHover?.(null)}
+            onFocus={() => onHover?.(model.slug)}
+            onBlur={() => onHover?.(null)}
             className="group bg-preview relative block h-81.25 w-full max-w-92.5 shrink-0 overflow-hidden rounded-[22px] ring-1 ring-ink-300 transition-shadow duration-200 hover:shadow-lg hover:shadow-ink-900/10 hover:ring-accent/40 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
           >
             <div className="absolute inset-0 transition-transform duration-500 ease-out group-hover:scale-105">

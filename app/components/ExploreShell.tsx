@@ -39,6 +39,8 @@ export default function ExploreShell({ children }: { children: ReactNode }) {
   const [resetSignal, setResetSignal] = useState(0);
   const [mode, setMode] = useState<'tour' | 'explore'>('tour');
   const [tourIndex, setTourIndex] = useState(0);
+  const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
+  const [previewSlug, setPreviewSlug] = useState<string | null>(null);
 
   if (slug !== stateSlug) {
     setStateSlug(slug);
@@ -47,6 +49,7 @@ export default function ExploreShell({ children }: { children: ReactNode }) {
     reset();
     setMode('tour');
     setTourIndex(0);
+    setHoveredSlug(null);
   }
 
   if (model && model.path !== viewerPath) {
@@ -129,7 +132,13 @@ export default function ExploreShell({ children }: { children: ReactNode }) {
             inert={!!model}
             style={{ pointerEvents: model ? 'none' : 'auto' }}
           >
-            <ModelGallery active={!model} />
+            <ModelGallery
+              active={!model}
+              onHover={(hovered) => {
+                setHoveredSlug(hovered);
+                if (hovered) setPreviewSlug(hovered);
+              }}
+            />
           </motion.div>
         )}
 
@@ -144,7 +153,10 @@ export default function ExploreShell({ children }: { children: ReactNode }) {
               exit={{ opacity: 0 }}
               transition={SLIDE}
             >
-              <EmptyWorkspace />
+              <EmptyWorkspace
+                preview={previewSlug ? getModel(previewSlug) ?? null : null}
+                showPreview={!!hoveredSlug}
+              />
             </motion.div>
           )}
 
