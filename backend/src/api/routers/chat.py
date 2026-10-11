@@ -51,8 +51,11 @@ def build_system_prompt(model: str, selected_part: Optional[str], part_info: Opt
         if part_info:
             selection += (
                 f'\nReference notes for {part_info.get("label", selected_part)}: {part_info.get("description", "")}'
-                "\nBase your answer on these notes and don't contradict them."
             )
+            functions = part_info.get("functions") or []
+            if functions:
+                selection += f'\nKey functions: {"; ".join(functions)}.'
+            selection += "\nBase your answer on these notes and don't contradict them."
     return SYSTEM_PROMPT.format(model=model, selection=selection).strip()
 
 

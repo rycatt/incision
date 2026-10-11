@@ -20,7 +20,7 @@ export default function InfoPanel({
   return (
     <aside
       aria-live="polite"
-      className="fixed top-24 left-6 z-10 max-h-[calc(100dvh-12.5rem)] w-[calc(100%-3rem)] max-w-80 overflow-y-auto rounded-2xl panel p-6 transition duration-200 ease-out starting:-translate-x-2 starting:opacity-0 md:top-64 md:max-h-[calc(100dvh-17rem)]"
+      className="fixed top-1/2 left-6 z-10 max-h-[calc(100dvh-10rem)] w-[calc(100%-3rem)] max-w-80 -translate-y-1/2 overflow-y-auto rounded-2xl panel p-6 transition duration-200 ease-out starting:-translate-x-2 starting:opacity-0"
     >
       <button
         onClick={onClose}
@@ -37,6 +37,20 @@ export default function InfoPanel({
       <p className="mt-3 text-[15px] leading-relaxed text-ink-900">
         {part.description}
       </p>
+
+      {part.functions && part.functions.length > 0 && (
+        <section className="mt-5 border-t border-line pt-5">
+          <h3 className="text-base font-semibold text-ink-900">Key functions</h3>
+          <ul className="mt-2.5 space-y-2">
+            {part.functions.map((fn) => (
+              <li key={fn} className="flex gap-3 text-[15px] leading-snug text-ink-700">
+                <span aria-hidden className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+                {fn}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <PartQuiz key={`${modelName}:${partId}`} modelName={modelName} partLabel={quizLabel} />
     </aside>

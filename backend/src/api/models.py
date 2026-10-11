@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field
 class PartInfo(BaseModel):
     label: str
     description: str
+    functions: List[str] = []
 
 
 class PartGroup(BaseModel):

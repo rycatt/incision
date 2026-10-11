@@ -20,7 +20,7 @@ export default function Home() {
             Incision
           </h1>
           <p className="font-display text-3xl text-ink-700 italic sm:text-4xl">
-            Dissect everything. Harm nothing.
+            Dissect anything. Harm nothing.
           </p>
 
           <div className="mt-8 flex flex-wrap items-center gap-3">
