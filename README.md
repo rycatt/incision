@@ -1,6 +1,6 @@
 # Incision
 
-Incision is a virtual dissection lab that runs in the browser. You can rotate an anatomical 3D frog, select its organs to read about them, hide or show body systems, and take a short guided tour. A Gemini-powered "Quiz me" button asks you a question about the selected organ.
+Incision is a virtual dissection lab that runs in the browser. Pick an organism, rotate its 3D anatomical model, select organs to read about them, hide or show body systems, and take a short guided tour. A Gemini-powered “Quiz me” button asks you a question about whichever organ you’ve selected
 
 ## Features
 
@@ -10,16 +10,15 @@ Incision is a virtual dissection lab that runs in the browser. You can rotate an
 - **Skin fade.** The skin turns see-through as you zoom in, so you can see the organs inside.
 - **Guided tour.** A short tour that steps through the heart and stomach, with Back, Next and Skip.
 - **Quiz me.** Asks one multiple-choice question about the selected organ, then checks your answer and explains it. Uses Google Gemini.
-- **Reset view.** Puts the camera back to the starting view.
 
 ## Tech stack
 
 | Part | Tools |
 | --- | --- |
 | Frontend | Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS v4 |
+| Backend | FastAPI (Python), Pydantic, google-genai |
 | 3D | three.js, React Three Fiber, drei, three-mesh-bvh |
 | Animation | Motion |
-| Backend | FastAPI (Python), Pydantic, google-genai |
 
 ## Prerequisites
 
@@ -54,26 +53,6 @@ Then open http://localhost:3000.
 The frontend expects the API at `http://localhost:8000`. If yours runs somewhere else, set `NEXT_PUBLIC_API_URL` in a `.env.local` file in the project root.
 
 If the backend isn't running, the 3D viewer still works, but organ descriptions, body systems, the tour and Quiz me will be empty or unavailable.
-
-## Project structure
-
-```
-app/
-  page.tsx               Landing page
-  explore/               Model gallery (/explore) and viewer (/explore/[model])
-  components/
-    ExploreShell.tsx     Shared layout for the gallery and viewer: tour, sidebar, info panel
-    gallery/             Model cards and live previews
-    viewer/              3D canvas, model, info panel, quiz, tour card, sidebar
-  data/                  Model list, display settings, skin-fade layers
-  lib/                   API client, types, hooks
-public/models/           Compressed .glb models served to the browser
-backend/src/api/
-  main.py                FastAPI app and CORS
-  routers/content.py     GET /models/{slug}/content
-  routers/chat.py        POST /chat (Gemini)
-  content/frog.json      Organ descriptions, body systems and tour steps for the frog
-```
 
 ## API
 
