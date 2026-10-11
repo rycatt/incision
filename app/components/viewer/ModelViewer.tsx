@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useEffect, useRef } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, Environment, Center, Bounds, useBounds } from '@react-three/drei';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
@@ -16,10 +16,12 @@ function FocusOnSelect({
   selected,
   resetSignal,
   tourTargets,
+  tourActive, 
 }: {
   selected: string | null;
   resetSignal: number;
   tourTargets: string[] | null;
+  tourActive: boolean;
 }) {
   const bounds = useBounds();
   const get = useThree((s) => s.get);
@@ -27,6 +29,8 @@ function FocusOnSelect({
   const goal = useRef<{ target: THREE.Vector3; position: THREE.Vector3 } | null>(null);
   const framed = useRef(false);
   const lastReset = useRef(resetSignal);
+  const controlsRef = useRef<OrbitControlsImpl | null>(null);
+  const [scene, setScene] = useState<THREE.Object3D | null>(null);
 
   useEffect(() => {
     const { camera, scene } = get();
@@ -36,7 +40,7 @@ function FocusOnSelect({
     const modelBox = bounds.refresh().getSize().box.clone();
     let targetBox = modelBox;
 
-    const focusNames = selected ? [selected] : tourTargets ?? [];
+    const focusNames = tourActive ? (tourTargets ?? []) : selected ? [selected] : [];
     const partBox = new THREE.Box3();
     focusNames.forEach((name) => {
       const part = scene.getObjectByName(name);
@@ -69,7 +73,7 @@ function FocusOnSelect({
     }
 
     goal.current = { target: center, position };
-  }, [selected, resetSignal, tourTargets, bounds, get, hasControls]);
+  }, [selected, resetSignal, tourTargets, tourActive, bounds, get, hasControls]);
 
   useEffect(() => {
     const controls = get().controls as OrbitControlsImpl | null;
@@ -116,33 +120,39 @@ function FocusOnSelect({
 
 export default function ModelViewer({
   path,
-  active = true,
-  resetSignal = 0,
-  tourTargets = null,
+  active,
+  resetSignal,
   selected,
   onSelect,
   visibility,
   onMeshesLoaded,
+  tourTargets,
+  tourActive,
 }: {
   path?: string;
-  active?: boolean;
-  resetSignal?: number;
-  tourTargets?: string[] | null;
+  active: boolean;
+  resetSignal: number;
   selected: string | null;
   onSelect: (id: string | null) => void;
   visibility: Record<string, boolean>;
   onMeshesLoaded: (names: string[]) => void;
+  tourTargets: string[] | null;
+  tourActive: boolean;
 }) {
   return (
     <Canvas
       camera={{ position: [0, 0, 5], fov: 30 }}
       gl={{ antialias: true }}
       frameloop={active ? 'always' : 'demand'}
+      style={{ pointerEvents: tourActive ? 'none' : 'auto' }}
+      onPointerMissed={() => {
+        if (!tourActive) onSelect(null);
+      }}
     >
-      <ambientLight intensity={1.5} />
-      <directionalLight position={[3, 5, 4]} intensity={2} />
-      <directionalLight position={[-3, 2, -4]} intensity={1} />
-      <Environment preset="studio" />
+      <ambientLight intensity={0.8} />
+      <directionalLight position={[3, 5, 4]} intensity={1.4} />
+      <directionalLight position={[-3, 2, -4]} intensity={0.6} />
+      <Environment preset="studio" environmentIntensity={0.6} />
 
       {path && (
         <Suspense key={path} fallback={null}>
@@ -154,18 +164,20 @@ export default function ModelViewer({
                 onSelect={onSelect}
                 visibility={visibility}
                 onMeshesLoaded={onMeshesLoaded}
+                interactive={!tourActive}
               />
             </Center>
             <FocusOnSelect
               selected={selected}
               resetSignal={resetSignal}
               tourTargets={tourTargets}
+              tourActive={tourActive}
             />
           </Bounds>
         </Suspense>
       )}
 
-      <OrbitControls makeDefault />
+      <OrbitControls makeDefault enabled={!tourActive} />
     </Canvas>
   );
 }

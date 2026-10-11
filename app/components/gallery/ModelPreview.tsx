@@ -36,10 +36,10 @@ export default function ModelPreview({
       frameloop={active ? 'always' : 'never'}
       style={{ pointerEvents: 'none' }}
     >
-      <ambientLight intensity={1.5} />
-      <directionalLight position={[3, 5, 4]} intensity={2} />
-      <directionalLight position={[-3, 2, -4]} intensity={1} />
-      <Environment preset="studio" />
+      <ambientLight intensity={0.8} />
+      <directionalLight position={[3, 5, 4]} intensity={1.4} />
+      <directionalLight position={[-3, 2, -4]} intensity={0.6} />
+      <Environment preset="studio" environmentIntensity={0.6} />
       <Suspense fallback={null}>
         <Bounds fit clip observe margin={1.5}>
           <Turntable>

@@ -116,14 +116,14 @@ export default function ChatPanel({
             onKeyDown={(event) => {
               if (event.key === 'Escape') setOpen(false);
             }}
-            className="absolute right-0 bottom-full mb-3 flex h-[min(28rem,calc(100dvh-8rem))] w-[min(22rem,calc(100vw-3rem))] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white/95 shadow-xl backdrop-blur"
+            className="absolute right-0 bottom-full mb-3 flex h-[min(28rem,calc(100dvh-8rem))] w-[min(22rem,calc(100vw-3rem))] flex-col overflow-hidden rounded-2xl panel"
           >
-            <header className="flex items-center justify-between border-b border-slate-100 px-4 py-3">
+            <header className="flex items-center justify-between border-b border-line px-4 py-3">
               <div>
-                <h2 className="text-sm font-semibold text-slate-900">
+                <h2 className="text-sm font-semibold text-ink-900">
                   Ask about the {subject}
                 </h2>
-                <p className="flex items-center gap-1 text-xs text-slate-400">
+                <p className="flex items-center gap-1 text-xs text-ink-600">
                   <Sparkles className="h-3 w-3" aria-hidden />
                   Powered by Gemini
                 </p>
@@ -132,7 +132,7 @@ export default function ChatPanel({
                 type="button"
                 onClick={() => setOpen(false)}
                 aria-label="Close chat"
-                className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
+                className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-ink-600 transition-colors hover:bg-ink-100 hover:text-ink-900"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -143,7 +143,7 @@ export default function ChatPanel({
               aria-live="polite"
               className="flex-1 space-y-3 overflow-y-auto px-4 py-3"
             >
-              <div className="max-w-[85%] rounded-2xl rounded-bl-md bg-slate-100 px-3.5 py-2 text-sm leading-relaxed text-slate-800">
+              <div className="max-w-[85%] rounded-2xl rounded-bl-md bg-ink-100 px-3.5 py-2 text-sm leading-relaxed text-ink-900">
                 Hi! Ask me anything about the {subject}&apos;s anatomy.
               </div>
 
@@ -155,8 +155,8 @@ export default function ChatPanel({
                   <div
                     className={
                       message.role === 'user'
-                        ? 'max-w-[85%] rounded-2xl rounded-br-md bg-brand px-3.5 py-2 text-sm leading-relaxed whitespace-pre-wrap text-white'
-                        : 'max-w-[85%] rounded-2xl rounded-bl-md bg-slate-100 px-3.5 py-2 text-sm leading-relaxed whitespace-pre-wrap text-slate-800'
+                        ? 'max-w-[85%] rounded-2xl rounded-br-md bg-accent px-3.5 py-2 text-sm leading-relaxed whitespace-pre-wrap text-accent-fg'
+                        : 'max-w-[85%] rounded-2xl rounded-bl-md bg-ink-100 px-3.5 py-2 text-sm leading-relaxed whitespace-pre-wrap text-ink-900'
                     }
                   >
                     {message.text}
@@ -165,21 +165,21 @@ export default function ChatPanel({
               ))}
 
               {pending && (
-                <div className="flex w-fit gap-1 rounded-2xl rounded-bl-md bg-slate-100 px-3.5 py-3">
+                <div className="flex w-fit gap-1 rounded-2xl rounded-bl-md bg-ink-100 px-3.5 py-3">
                   <span className="sr-only">The assistant is typing</span>
-                  <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-400 [animation-delay:-0.3s]" />
-                  <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-400 [animation-delay:-0.15s]" />
-                  <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-400" />
+                  <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-ink-400 [animation-delay:-0.3s]" />
+                  <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-ink-400 [animation-delay:-0.15s]" />
+                  <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-ink-400" />
                 </div>
               )}
 
               {failed && (
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-ink-600">
                   Couldn&apos;t reach the assistant.{' '}
                   <button
                     type="button"
                     onClick={() => request(messages)}
-                    className="cursor-pointer font-medium text-brand hover:text-brand/70"
+                    className="cursor-pointer font-medium text-ink-600 hover:text-ink-900"
                   >
                     Retry
                   </button>
@@ -193,7 +193,7 @@ export default function ChatPanel({
                       key={suggestion}
                       type="button"
                       onClick={() => send(suggestion)}
-                      className="cursor-pointer rounded-full border border-slate-200 px-3 py-1.5 text-xs text-slate-600 transition-colors hover:border-brand/30 hover:bg-brand/5 hover:text-brand/70"
+                      className="cursor-pointer rounded-full border border-line px-3 py-1.5 text-xs text-ink-900 transition-colors hover:border-accent/40 hover:bg-ink-100 hover:text-ink-900"
                     >
                       {suggestion}
                     </button>
@@ -204,7 +204,7 @@ export default function ChatPanel({
 
             <form
               onSubmit={onSubmit}
-              className="flex items-center gap-2 border-t border-slate-100 px-3 py-3"
+              className="flex items-center gap-2 border-t border-line px-3 py-3"
             >
               <input
                 ref={inputRef}
@@ -213,13 +213,13 @@ export default function ChatPanel({
                 maxLength={1000}
                 placeholder={`Ask about the ${subject}...`}
                 aria-label="Your question"
-                className="min-w-0 flex-1 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:border-brand/50"
+                className="min-w-0 flex-1 rounded-full border border-line bg-ink-100 px-4 py-2 text-sm text-ink-900 outline-none placeholder:text-ink-400 focus:border-accent"
               />
               <button
                 type="submit"
                 disabled={!input.trim() || pending}
                 aria-label="Send"
-                className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-brand text-white transition-colors hover:bg-brand/90 disabled:cursor-not-allowed disabled:opacity-40"
+                className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-accent text-accent-fg transition-colors hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <SendHorizontal className="h-4 w-4" />
               </button>
@@ -233,7 +233,7 @@ export default function ChatPanel({
         onClick={() => setOpen((value) => !value)}
         aria-expanded={open}
         aria-label={open ? 'Close chat' : 'Ask a question'}
-        className="flex h-13 w-13 cursor-pointer items-center justify-center rounded-full bg-brand text-white shadow-lg transition-colors hover:bg-brand/90 focus-visible:ring-2 focus-visible:ring-brand/40 focus-visible:ring-offset-2 focus-visible:outline-none"
+        className="flex h-13 w-13 cursor-pointer items-center justify-center rounded-full bg-accent text-white shadow-lg transition-colors hover:bg-accent-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:outline-none"
       >
         {open ? <X className="h-6 w-6" /> : <SparkleIcon className="h-7 w-7" />}
       </button>

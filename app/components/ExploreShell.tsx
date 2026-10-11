@@ -57,19 +57,16 @@ export default function ExploreShell({ children }: { children: ReactNode }) {
   const tour = (slug && TOURS[slug]) || DEFAULT_TOUR;
   const tourStep = tour[tourIndex];
   const isLastStep = tourIndex === tour.length - 1;
+  const touring = !!model && mode === 'tour';
 
   return (
     <MotionConfig reducedMotion="user">
-      <main className="relative h-dvh w-full overflow-hidden bg-background">
+      <main className="relative h-dvh w-full overflow-hidden bg-app">
       <AnimatePresence>
-  {model && mode === 'tour' && (
+  {touring && (
     <motion.div
       key="tour-card"
-      className="fixed top-6 left-20 z-10 hidden md:block"
-      initial={{ x: -40, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
-      exit={{ x: -40, opacity: 0 }}
-      transition={SLIDE}
+      className="pointer-events-none fixed inset-x-0 bottom-8 z-20 flex justify-center px-4"
     >
       <TourCard
         step={tourStep}
@@ -85,7 +82,7 @@ export default function ExploreShell({ children }: { children: ReactNode }) {
 </AnimatePresence>
         <motion.div
           className="absolute inset-0"
-          style={{ pointerEvents: model ? 'auto' : 'none' }}
+          style={{ pointerEvents: model && !touring ? 'auto' : 'none' }}
           animate={{ opacity: model ? 1 : 0 }}
           transition={SLIDE}
           onAnimationComplete={() => {
@@ -101,6 +98,7 @@ export default function ExploreShell({ children }: { children: ReactNode }) {
             visibility={visibility}
             onMeshesLoaded={setMeshes}
             tourTargets={mode === 'tour' ? tourStep.targets : null}
+            tourActive={mode === 'tour'}
           />
         </motion.div>
 
@@ -110,8 +108,8 @@ export default function ExploreShell({ children }: { children: ReactNode }) {
             initial={false}
             animate={
               model
-                ? { x: 'calc(-100% - 24px)', opacity: 0 }
-                : { x: 0, opacity: 1 }
+                ? { x: 'calc(-100% - 24px)' }
+                : { x: 0 }
             }
             transition={SLIDE}
             inert={!!model}
@@ -140,28 +138,28 @@ export default function ExploreShell({ children }: { children: ReactNode }) {
             <motion.div
               key="back"
               className="fixed top-6 left-6 z-10"
-              initial={{ x: -80, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: -80, opacity: 0 }}
+              initial={{ x: -80 }}
+              animate={{ x: 0 }}
+              exit={{ x: -80 }}
               transition={SLIDE}
             >
               <Link
                 href="/explore"
                 aria-label="Back to models"
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white/95 text-slate-600 shadow-md backdrop-blur transition-colors hover:bg-slate-100 hover:text-slate-900"
+                className="panel flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-ink-100"
               >
                 <ChevronLeft className="h-5 w-5" />
               </Link>
             </motion.div>
           )}
 
-          {model && (
+          {model && !touring && (
             <motion.div
               key="sidebar"
               className="fixed top-6 right-6 z-10"
-              initial={{ x: 'calc(100% + 24px)', opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: 'calc(100% + 24px)', opacity: 0 }}
+              initial={{ x: 'calc(100% + 24px)' }}
+              animate={{ x: 0 }}
+              exit={{ x: 'calc(100% + 24px)' }}
               transition={{ ...SLIDE, delay: 0.1 }}
             >
               <Sidebar
@@ -173,13 +171,13 @@ export default function ExploreShell({ children }: { children: ReactNode }) {
             </motion.div>
           )}
 
-          {model && (
+          {model && !touring && (
             <motion.div
               key="reset"
               className="fixed right-6 bottom-6 z-10 flex items-center gap-3"
-              initial={{ y: 80, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: 80, opacity: 0 }}
+              initial={{ y: 96 }}
+              animate={{ y: 0 }}
+              exit={{ y: 96 }}
               transition={{ ...SLIDE, delay: 0.15 }}
             >
               <button
@@ -189,7 +187,7 @@ export default function ExploreShell({ children }: { children: ReactNode }) {
                   setSelected(null);
                   setResetSignal((n) => n + 1);
                 }}
-                className="flex h-13 w-13 cursor-pointer items-center justify-center rounded-full bg-white text-slate-700 backdrop-blur transition-colors hover:bg-slate-100 hover:text-slate-900"
+                className="panel flex h-13 w-13 cursor-pointer items-center justify-center rounded-full transition-colors hover:bg-ink-100"
               >
                 <RefreshCw className="h-5 w-5" aria-hidden />
               </button>
@@ -202,7 +200,7 @@ export default function ExploreShell({ children }: { children: ReactNode }) {
           )}
         </AnimatePresence>
 
-        {model && (
+        {model && !touring && (
           <InfoPanel
             part={selected ? savedInfo ?? FALLBACK : null}
             onClose={() => setSelected(null)}
