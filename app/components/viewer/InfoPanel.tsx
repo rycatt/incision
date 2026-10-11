@@ -1,12 +1,11 @@
 import { X } from 'lucide-react';
-
-export type PartInfo = { label: string; description: string };
+import type { OrganInfo } from '../../lib/types';
 
 export default function InfoPanel({
   part,
   onClose,
 }: {
-  part: PartInfo | null;
+  part: OrganInfo | null;
   onClose: () => void;
 }) {
   if (!part) return null;
@@ -24,7 +23,7 @@ export default function InfoPanel({
         <X className="h-4 w-4 cursor-pointer" />
       </button>
 
-      <p className="text-xs font-medium tracking-widest text-blue-600 uppercase">
+      <p className="text-xs font-medium tracking-widest text-brand uppercase">
         Selected part
       </p>
       <h2 className="mt-2 pr-8 text-2xl font-bold text-slate-900">{part.label}</h2>

@@ -21,7 +21,7 @@ export default function ModelGallery({ active = true }: { active?: boolean }) {
             key={model.slug}
             href={`/explore/${model.slug}`}
             aria-label={`Explore the ${model.name.toLowerCase()} model`}
-            className="group flex h-81.25 w-full max-w-92.5 shrink-0 flex-col overflow-hidden rounded-[14px] border border-blue-300 bg-white transition-all duration-200 hover:border-blue-500 hover:shadow-lg hover:shadow-blue-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            className="group flex h-81.25 w-full max-w-92.5 shrink-0 flex-col overflow-hidden rounded-[14px] border border-brand/30 bg-white transition-all duration-200 hover:border-brand hover:shadow-lg hover:shadow-brand/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
           >
             <div className="h-[70%] bg-background">
               <div className="h-full w-full transition-transform duration-500 ease-out group-hover:scale-110">
@@ -34,7 +34,7 @@ export default function ModelGallery({ active = true }: { active?: boolean }) {
                 <p className="text-lg font-bold text-neutral-900">{model.name}</p>
                 <p className="text-sm text-neutral-500">{model.category}</p>
               </div>
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-50 text-blue-600 transition-colors group-hover:bg-blue-100">
+              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-brand/5 text-brand transition-colors group-hover:bg-brand/10">
                 <ArrowRight className="h-5 w-5" strokeWidth={2.25} />
               </span>
             </div>

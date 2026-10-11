@@ -15,9 +15,11 @@ const DEFAULT_DIRECTION = new THREE.Vector3(0, 0, 1);
 function FocusOnSelect({
   selected,
   resetSignal,
+  tourTargets,
 }: {
   selected: string | null;
   resetSignal: number;
+  tourTargets: string[] | null;
 }) {
   const bounds = useBounds();
   const get = useThree((s) => s.get);
@@ -34,9 +36,14 @@ function FocusOnSelect({
     const modelBox = bounds.refresh().getSize().box.clone();
     let targetBox = modelBox;
 
-    const part = selected ? scene.getObjectByName(selected) : undefined;
-    if (part) {
-      const partBox = new THREE.Box3().setFromObject(part);
+    const focusNames = selected ? [selected] : tourTargets ?? [];
+    const partBox = new THREE.Box3();
+    focusNames.forEach((name) => {
+      const part = scene.getObjectByName(name);
+      if (part) partBox.expandByObject(part);
+    });
+
+    if (!partBox.isEmpty()) {
       targetBox = new THREE.Box3(
         modelBox.min.clone().lerp(partBox.min, ZOOM_AMOUNT),
         modelBox.max.clone().lerp(partBox.max, ZOOM_AMOUNT)
@@ -62,7 +69,7 @@ function FocusOnSelect({
     }
 
     goal.current = { target: center, position };
-  }, [selected, resetSignal, bounds, get, hasControls]);
+  }, [selected, resetSignal, tourTargets, bounds, get, hasControls]);
 
   useEffect(() => {
     const controls = get().controls as OrbitControlsImpl | null;
@@ -111,6 +118,7 @@ export default function ModelViewer({
   path,
   active = true,
   resetSignal = 0,
+  tourTargets = null,
   selected,
   onSelect,
   visibility,
@@ -119,6 +127,7 @@ export default function ModelViewer({
   path?: string;
   active?: boolean;
   resetSignal?: number;
+  tourTargets?: string[] | null;
   selected: string | null;
   onSelect: (id: string | null) => void;
   visibility: Record<string, boolean>;
@@ -147,7 +156,11 @@ export default function ModelViewer({
                 onMeshesLoaded={onMeshesLoaded}
               />
             </Center>
-            <FocusOnSelect selected={selected} resetSignal={resetSignal} />
+            <FocusOnSelect
+              selected={selected}
+              resetSignal={resetSignal}
+              tourTargets={tourTargets}
+            />
           </Bounds>
         </Suspense>
       )}

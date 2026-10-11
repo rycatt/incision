@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import type { Group } from '../types/anatomy';
+import type { Group } from './types';
 
 export default function useVisibility() {
   const [visibility, setVisibility] = useState<Record<string, boolean>>({});

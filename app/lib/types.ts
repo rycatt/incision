@@ -5,3 +5,11 @@ export type Group = { id: string; label: string; members: string[] };
 export type Layer = { members: string[]; fadeAt: number };
 
 export type ModelEntry = { slug: string; name: string; category: string; path: string };
+
+export type TourStep = {
+  title: string;
+  body: string;
+  targets: string[];
+};
+
+export type ChatMessage = { role: 'user' | 'model'; text: string };

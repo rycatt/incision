@@ -1,0 +1,20 @@
+{
+  "bench::brain": {
+    "name": "brain",
+    "system": "Unknown",
+    "description": "No information is available for \"brain\" on a bench.",
+    "function": "",
+    "facts": []
+  },
+  "duck::heart": {
+    "name": "Heart",
+    "system": "Circulatory System",
+    "description": "The heart is a muscular organ located in the center of the chest cavity. It is divided into four distinct chambers, consisting of two atria and two ventricles. This robust structure pumps blood throughout the duck's entire body.",
+    "function": "It pumps oxygen-rich blood to the organs and muscles while sending oxygen-poor blood to the lungs.",
+    "facts": [
+      "A duck's heart beats much faster than a human heart, often exceeding 100 to 200 beats per minute.",
+      "The avian heart is remarkably efficient to support the high energy demands of flight and swimming.",
+      "Just like humans, ducks have a closed circulatory system powered entirely by this central pump."
+    ]
+  }
+}

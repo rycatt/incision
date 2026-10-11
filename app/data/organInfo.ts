@@ -1,4 +1,4 @@
-import type { OrganInfo } from '../types/anatomy';
+import type { OrganInfo } from '../lib/types';
 
 export const ORGAN_INFO: Record<string, OrganInfo> = {
   LOD3spShape: { label: 'Heart', description: 'Pumps blood through the body.' },

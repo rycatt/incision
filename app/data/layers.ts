@@ -1,4 +1,4 @@
-import type { Layer } from '../types/anatomy';
+import type { Layer } from '../lib/types';
 
 export const LAYERS: Layer[] = [
   { members: ['Bench_Leather_Cushion', 'Bench_Leather_Straps'], fadeAt: 0.8 },

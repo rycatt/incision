@@ -5,4 +5,4 @@ export const MODEL_CONFIG = {
 };
 
 export const GHOST_OPACITY = 0.12;
-export const Cube = 0;
+

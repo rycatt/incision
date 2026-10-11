@@ -2,8 +2,19 @@
 
 import { GROUPS } from '../../data/groups';
 import { ORGAN_INFO } from '../../data/organInfo';
-import type { Group } from '../../types/anatomy';
-import { SECTION_HEADER, ROW, CHECKBOX, LABEL_ON, LABEL_OFF } from './styles';
+import type { Group } from '../../lib/types';
+
+const SECTION_HEADER =
+  'mb-3 text-xs font-medium tracking-widest text-brand uppercase';
+
+const ROW =
+  'flex cursor-pointer items-center gap-2.5 rounded-lg px-2 py-1.5 select-none transition-colors hover:bg-slate-100';
+
+const CHECKBOX = 'h-4 w-4 cursor-pointer accent-brand';
+
+const LABEL_ON = 'text-sm text-slate-800 transition-colors';
+
+const LABEL_OFF = 'text-sm text-slate-400 transition-colors';
 
 export default function Sidebar({
   meshes,

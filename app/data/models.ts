@@ -1,9 +1,9 @@
-import type { ModelEntry } from '../types/anatomy';
+import type { ModelEntry } from '../lib/types';
 
 export const MODELS: ModelEntry[] = [
   { slug: 'helmet', name: 'Helmet', category: 'Vertebrate', path: '/models/helmet.glb' },
   { slug: 'duck', name: 'Duck', category: 'Vertebrate', path: '/models/duck.glb' },
-  { slug: 'bench', name: 'Bench', category: '3D Print', path: '/models/Bench.glb' },
+  { slug: 'gallbladder', name: 'Gallbladder', category: 'organ', path: '/models/Galblader.glb' },
 ];
 
 export function getModel(slug: string) {

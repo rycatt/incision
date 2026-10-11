@@ -1,4 +1,4 @@
-import type { Group } from '../types/anatomy';
+import type { Group } from '../lib/types';
 
 export const GROUPS: Group[] = [
   { id: 'digestive',  label: 'Digestive System',  members: ['Bench_Battens', 'Bench_Floor_Glides'] },

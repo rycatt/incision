@@ -5,8 +5,8 @@ import { useFrame, type ThreeEvent } from '@react-three/fiber';
 import { useGLTF, useBounds } from '@react-three/drei';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import * as THREE from 'three';
-import { MODEL_CONFIG, GHOST_OPACITY } from '../../config/model';
-import { LAYERS, FADE_BAND, FADE_SPEED } from '../../config/layers';
+import { MODEL_CONFIG, GHOST_OPACITY } from '../../data/settings';
+import { LAYERS, FADE_BAND, FADE_SPEED } from '../../data/layers';
 
 export default function Model({
   path,
