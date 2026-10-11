@@ -1,3 +1,5 @@
+import os
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -9,9 +11,11 @@ from .routers import chat, content
 
 app = FastAPI()
 
+allowed_origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000").split(",")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=[origin.strip().rstrip("/") for origin in allowed_origins if origin.strip()],
     allow_methods=["*"],
     allow_headers=["*"],
 )

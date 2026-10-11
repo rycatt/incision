@@ -2,7 +2,6 @@
 name = "api"
 version = "0.1.0"
 description = "Add your description here"
-readme = "README.md"
 authors = [
     { name = "Ryan Catacutan", email = "94097753+rycatt@users.noreply.github.com" }
 ]
